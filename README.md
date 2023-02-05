@@ -277,6 +277,14 @@ print(hwnd)
     f_tuple = QFileDialog.getOpenFileName(self, '选择文件', '', 'Excel files(*.xlsx , *.xls)')
 ```
 
+
+
+### 4.8 设置Icon
+
+参考：[pyqt5给程序设置图标ico](https://blog.csdn.net/chenhanxuan1999/article/details/103796282)
+
+
+
 ## 打包发布
 
 参考：[PyInstaller打包](http://c.biancheng.net/view/2690.html)
@@ -289,13 +297,19 @@ print(hwnd)
 
 参数解释：
 
-```shell
--w  # 。。。
--F 
--n Enhanced-Typora 
--i "$FileDir$/resources/icon/typora-file-icon@2x.png" 
---workpath "$FileDir$/.build" 
---distpath "$FileDir$/.build" 
-$FileName$ 
-```
+>-w  # 指定程序运行时不显示命令行窗口（仅对 Windows 有效）
+>
+>-F  # 产生单个的可执行文件
+>
+>-n Enhanced-Typora  # 指定exe文件名
+>
+>-i "$FileDir$/resources/icon/typora-file-icon@2x.png"  # 指定exe图标
+>
+>--workpath "$FileDir$/.build"  # 指定生成路径，包括build等目录
+>
+>--distpath "$FileDir$/.build"  # 指定生成dist路径，包括exe文件
+>
+>--specpath  "$FileDir$/.build"  # 指定生成spec路径，包括spec文件
+>
+>$FileName$   # 指定入口，如main.py
 

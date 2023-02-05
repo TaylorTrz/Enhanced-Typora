@@ -1,6 +1,7 @@
 import sys
 import func.win as win
 import gui.board as board
+import util.utils as utils
 
 from PyQt5 import QtCore
 from PyQt5 import QtGui
@@ -50,7 +51,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.actionOpen.triggered.connect(lambda: self.open_exe(self.open_file()))
         self.ui.actionNew.triggered.connect(lambda: self.open_exe())
         self.ui.actionConfig.triggered.connect(lambda: self.open_config())
-        self.ui.actionClose.triggered.connect(lambda: self.ui.statusbar.showMessage("tool close?", 500))
+        self.ui.actionClose.triggered.connect(lambda: QtCore.QCoreApplication.instance().exit(0))
 
     def tab_close(self, index: int):
         """Close cursor-focus tab widget and kill sub process."""
@@ -103,8 +104,7 @@ def run():
     app = QtWidgets.QApplication(sys.argv)
     window = MainWindow()
     # 加载Icon
-    icon = QtGui.QIcon(r"resources/icon/typora-file-icon@2x.png")
-    window.setWindowIcon(icon)
+    window.setWindowIcon(QtGui.QIcon(utils.icon_path()))
     window.show()
     sys.exit(app.exec())
 
