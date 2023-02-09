@@ -2,6 +2,7 @@ import sys
 import func.win as win
 import gui.board as board
 import util.utils as utils
+import gui.resources_rc  # type: ignore
 
 from PyQt5 import QtCore
 from PyQt5 import QtGui
@@ -21,28 +22,32 @@ class MainWindow(QtWidgets.QMainWindow):
         self.add_action()
 
     def open_exe(self, file=None, name='typora'):
+        exe = self.bin_dict.get(name, "")
+        if not exe:
+            self.statusBar().showMessage("Set your Typora path correctly!!!", 2000)
+            return
         process = QtCore.QProcess()
-        process.start(self.bin_dict.get(name), [file])
+        process.start(exe, [file])
         (title, handle) = win.start(file=file, name=name, parent=self.ui.tabWidget)
         print("processId: " + str(process.processId()))
         print("handle hex: " + hex(handle))
-        tWindow = QtGui.QWindow.fromWinId(handle)
-        tWindow.setFlag(QtCore.Qt.WindowType.FramelessWindowHint, True)
-        tWindow.setFlag(QtCore.Qt.CustomizeWindowHint, True)
-        tWidget = QtWidgets.QWidget.createWindowContainer(tWindow)
-        tWidget.setProperty("process", process)
-        process.setParent(tWidget)
-        self.ui.horizontalLayout.addWidget(tWidget)
-        self.ui.tabWidget.addTab(tWidget, title)
-        self.ui.tabWidget.setCurrentWidget(tWidget)
+        window = QtGui.QWindow.fromWinId(handle)
+        window.setFlag(QtCore.Qt.WindowType.FramelessWindowHint, True)
+        window.setFlag(QtCore.Qt.CustomizeWindowHint, True)
+        widget = QtWidgets.QWidget.createWindowContainer(window)
+        widget.setProperty("process", process)
+        process.setParent(widget)
+        self.ui.horizontalLayout.addWidget(widget)
+        self.ui.tabWidget.addTab(widget, title)
+        self.ui.tabWidget.setCurrentWidget(widget)
 
     def open_file(self, file_type="*.*"):
-        file_tuple = QtWidgets.QFileDialog.getOpenFileName(self, "选择文件", '', 'Markdown files(*.md)')
+        file_tuple = QtWidgets.QFileDialog.getOpenFileName(self, "Choose file", '', 'Markdown files(*.md)')
         print("tuple: " + str(file_tuple))
         return file_tuple[0]
 
     def open_config(self):
-        file_tuple = QtWidgets.QFileDialog.getOpenFileName(self, "选择文件", '', 'Typora可执行文件(*.*)')
+        file_tuple = QtWidgets.QFileDialog.getOpenFileName(self, "Choose file", '', 'Typora可执行文件(*.*)')
         print("tuple: " + str(file_tuple))
         self.bin_dict.update({'typora': file_tuple[0]})
 
@@ -104,7 +109,7 @@ def run():
     app = QtWidgets.QApplication(sys.argv)
     window = MainWindow()
     # 加载Icon
-    window.setWindowIcon(QtGui.QIcon(utils.icon_path()))
+    window.setWindowIcon(QtGui.QIcon(":/icon"))
     window.show()
     sys.exit(app.exec())
 

@@ -1,0 +1,7 @@
+<!DOCTYPE RCC>
+<RCC>
+    <qresource>
+        <file alias="icon">icon/typora.ico</file>
+        <file alias="background">photo/preview.jpg</file>
+    </qresource>
+</RCC>

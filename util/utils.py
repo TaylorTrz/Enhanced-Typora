@@ -9,4 +9,4 @@ def abs_path():
 
 
 def icon_path():
-    return r"resources/icon/typora.ico"
+    return r":/icon/typora.ico"

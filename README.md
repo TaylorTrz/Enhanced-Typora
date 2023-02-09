@@ -23,7 +23,7 @@
 - 黄色：包括命令栏和预览窗口，命令栏可以让我们以命令交互的方式进行控制，预览可以看到文件内的具体内容；
 - 绿色：包括子目录窗口、状态栏、元信息，这些优先级最低；
 
-![image-20230110232933003](pic/README/image-20230110232933003.png)
+![image-20230110232933003](resources/pic/README/image-20230110232933003.png)
 
 给出数据流图：
 
@@ -67,7 +67,7 @@ NotePlat，最终目标是管理Markdown格式的所有笔记，具体有以下�
 
 找到Qt Disnger，路径一般为`qt5_applications\Qt\bin\designer.exe`：
 
-![image-20230115160323129](pic/README/image-20230115160323129.png)
+![image-20230115160323129](resources/pic/README/image-20230115160323129.png)
 
 配置 PyUIC，PyUIC主要是把Qt Designer生成的.ui文件换成.py文件：
 
@@ -99,7 +99,7 @@ QWidget继承于QObject和QPaintDevice，QDialog和QMainWindow则继承于QWidge
 
 QWidget类是所有用户界面对象的基类。
 
-![这里写图片描述](pic/README/20160117195225083.png)
+![这里写图片描述](resources/pic/README/20160117195225083.png)
 
 > 窗口部件是用户界面的一个原子：它从窗口系统接收鼠标、键盘和其它事件，并且将自己的表现形式绘制在屏幕上。每一个窗口部件都是矩形，并且它们按Z轴顺序排列。一个窗口部件可以被它的父窗口部件或者它前面的窗口部件盖住一部分。
 >
@@ -111,7 +111,7 @@ QWidget类是所有用户界面对象的基类。
 
 QMainWindow类提供一个有菜单条、工具栏、状态条的主应用程序窗口（例如：开发Qt常用的IDE-Visual Studio、Qt Creator等）。
 
-![这里写图片描述](pic/README/20160117185134087.png)
+![这里写图片描述](resources/pic/README/20160117185134087.png)
 
 > 一个主窗口提供了构建应用程序的用户界面框架。Qt拥有QMainWindow及其相关类来管理主窗口。
 >
@@ -266,7 +266,7 @@ print(hwnd)
     self.ui.gridLayout.addWidget(self.tWidget, 0, 1, 2, 1)
 ```
 
-### 4.7 打开文件
+### 4.7 文件浏览窗口
 
 参考：[打开文件或文件夹 QFileDialog](https://www.jianshu.com/p/98e8218b2309)
 
@@ -281,7 +281,62 @@ print(hwnd)
 
 ### 4.8 设置Icon
 
-参考：[pyqt5给程序设置图标ico](https://blog.csdn.net/chenhanxuan1999/article/details/103796282)
+参考：[pyqt5给程序设置图标ico](https://zhuanlan.zhihu.com/p/590358586)
+
+1、目录`resources`下包含所有资源文件：
+
+```shell
+resources/
+├── icon
+│   └── typora.ico
+├── photo
+│   └── preview.jpg
+└── resources.qrc
+```
+
+2、资源文件定义为`resources.qrc`：
+
+```xml
+<!DOCTYPE RCC>
+<RCC>
+    <qresource>
+        <file alias="icon">icon/typora.ico</file>
+        <file alias="background">photo/preview.jpg</file>
+    </qresource>
+</RCC>
+```
+
+3、使用工具`pyrcc`进行压缩与编译，得到目标文件：
+
+```shell
+$ pyrcc.py -o resource_rcc.py resources.qrc
+```
+
+4、主窗口中引入：
+
+```
+import gui.resources_rc  # type: ignore
+```
+
+5、使用icon：
+
+```python
+window.setWindowIcon(QtGui.QIcon(":/icon"))
+```
+
+
+
+### 4.9 设置背景图片或颜色
+
+```python
+# Set background image or color
+window.setObjectName("MainWindow")
+window.setStyleSheet("#MainWindow{background-image:url(:/background);}")
+window.setStyleSheet("#MainWindow{background-color: pink}")
+window.ui.tabWidget.setStyleSheet("#tabWidget{background-color: pink}")
+window.ui.centralwidget.setStyleSheet("#centralwidget{background-color: pink}")
+window.ui.menubar.setStyleSheet("#menubar{background-color: pink}")
+```
 
 
 
@@ -289,7 +344,16 @@ print(hwnd)
 
 参考：[PyInstaller打包](http://c.biancheng.net/view/2690.html)
 
-使用PyInstaller， 将 Python 程序转换成独立的执行文件：
+IDE配置PyInstaller：
+
+```yaml
+Name: PyInstaller
+Program: C:\Users\taylor Tao\AppData\Local\Programs\Python\Python38\Scripts\pyinstaller.exe
+Arguments: -w -F -n Enhanced-Typora  -i "$FileDir$/resources/icon/typora.ico"  --workpath "$FileDir$/.build"  --distpath "$FileDir$/.build" --specpath "$FileDir$/.build"   $FileName$ 
+Working directory: $FileDir$
+```
+
+当然也可以使用命令行，将 Python 程序转换成独立的执行文件：
 
 ```
 "pyinstaller.exe"  -F main.py
@@ -313,3 +377,8 @@ print(hwnd)
 >
 >$FileName$   # 指定入口，如main.py
 
+
+
+## TODO
+
+打开Typora后，如果Typora就剩最后一个窗口，直接关闭tab后，会导致再次打开Typora，弹出所有上次的进程。
