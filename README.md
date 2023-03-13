@@ -381,4 +381,8 @@ Working directory: $FileDir$
 
 ## TODO
 
-打开Typora后，如果Typora就剩最后一个窗口，直接关闭tab后，会导致再次打开Typora，弹出所有上次的进程。
+打开Enhanced-Typora后，如果就剩最后一个tab且直接关闭应用，会导致再次单独打开Typora，弹出所有上次的窗口。似乎是个Typora本身引发的异常。
+
+1、测试当前进程
+
+2、使用多线程（测试中，测试成功）11
